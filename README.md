@@ -18,3 +18,13 @@ Usage:
 
   > ./minttycolor.sh
 
+
+Notes:
+You can find many really good looking mintty themes here:
+- https://github.com/mavnn/mintty-colors-solarized
+- https://github.com/oumu/mintty-color-schemes
+
+
+
+
+
