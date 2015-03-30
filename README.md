@@ -5,10 +5,11 @@ Usage:
 
 1) compile by running: 
   > javac GetMinttyTheme.java
-2) run the program to generate a bash script from a mintty config file named "minttycolor"
+
+2) run the program to generate a bash script from a mintty config file named "minttycolor":
   > java GetMinttyTheme minttycolor
 
-   This will generate a file named minttycolor.sh
+   This will generate a file named minttycolor.sh.
 
 3) depending on your umask settings, you might need to change the permissions on the generated bash file to allow you to execute the file:
 
