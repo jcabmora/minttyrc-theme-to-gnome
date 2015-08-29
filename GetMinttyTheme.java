@@ -49,9 +49,9 @@ public static void main(String args[]){
        for(String colorKey : colorKeys){
          String colorValueAsRGBString = prop.getProperty(colorKey);
          if(colorValueAsRGBString != null){
-           palette.append("#");
+           palette.append("'#");
            palette.append(getColorValue(colorValueAsRGBString));
-           palette.append(":");
+           palette.append("',");
           }
        }
 
@@ -74,8 +74,6 @@ public static void main(String args[]){
        PrintWriter pw = new PrintWriter(new FileWriter(outputFile));
 
        pw.write("#!/bin/bash \n");
-       pw.write("# Custom theme for gnome-terminal \n");
-       pw.write("gnome_term_profile=/apps/gnome-terminal/profiles/Default \n");
        pw.write("palette=\"" + palette.toString() + "\" \n");
        if(fgValueAdRGBString != null){
          String fg_color = getColorValue(fgValueAdRGBString);
@@ -85,13 +83,16 @@ public static void main(String args[]){
          String bg_color = getColorValue(bgValueAdRGBString);
          pw.write("bg_color=\"#" + bg_color + "\" \n");
        }
-       pw.write("bd_color=\"#000000000000\" \n");
-       pw.write("gconftool-2 -s -t string $gnome_term_profile/palette $palette \n");
-       pw.write("gconftool-2 -s -t string $gnome_term_profile/bold_color $bd_color \n");
-       pw.write("gconftool-2 -s -t string $gnome_term_profile/background_color $bg_color \n");
-       pw.write("gconftool-2 -s -t string $gnome_term_profile/foreground_color $fg_color \n");
-       pw.write("gconftool-2 -s -t bool $gnome_term_profile/use_theme_colors false \n");
-       pw.write("gconftool-2 -s -t bool $gnome_term_profile/bold_color_same_as_fg true \n"); //TODO: add code to adjust bold color from fg color
+      pw.write("bd_color=\"#000000000000\" \n");
+      pw.write("dconfdir=/org/gnome/terminal/legacy/profiles:\n");
+      pw.write("profile=\"$(dconf read /org/gnome/terminal/legacy/profiles:/default | sed s/^\\'// | sed s/\\'$//)\" \n");
+      pw.write("profile_path=$dconfdir/:$profile\n");
+      pw.write("dconf write $profile_path/palette \"[$palette]\"\n");
+      pw.write("dconf write $profile_path/bold-color \"'$bd_color'\"\n");
+      pw.write("dconf write $profile_path/background-color \"'$bg_color'\"\n");
+      pw.write("dconf write $profile_path/foreground-color \"'$fg_color'\"\n");
+      pw.write("dconf write $profile_path/use-theme-colors \"false\"\n");
+      pw.write("dconf write $profile_path/bold-color-same-as-fg \"false\"\n");
        pw.flush();
     	}
     	else
